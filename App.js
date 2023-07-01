@@ -8,8 +8,9 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {images} from './constants';
 import {Header} from './components';
+import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const [jokeContent, setJokeContent] = useState([
@@ -45,7 +46,19 @@ const App = () => {
 
   const [currentJoke, setCurrentJoke] = useState(null);
 
+  const fetchCart = async () => {
+    const exists = await AsyncStorage.getItem('Vote');
+    if (!exists) {
+      await AsyncStorage.setItem('Vote', JSON.stringify([]));
+    } else {
+      const data = JSON.parse(exists);
+      // loadVote(data);
+    }
+  };
+
   useEffect(() => {
+    fetchCart();
+
     const getRandomUnreadJoke = () => {
       const unreadJokes = jokeContent.filter(joke => !joke.isRead);
       const randomIndex = Math.floor(Math.random() * unreadJokes.length);
@@ -64,6 +77,7 @@ const App = () => {
             isRead: true,
           };
         }
+        addVote(joke);
         return joke;
       });
 
@@ -260,6 +274,19 @@ const App = () => {
   );
 };
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    storeItems: state,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadVote: vo => dispatch({type: 'LOAD_VOTE', payload: vo}),
+
+    addVote: vo => dispatch({type: 'ADD_VOTE', payload: vo}),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 const styles = StyleSheet.create({});
