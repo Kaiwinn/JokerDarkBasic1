@@ -10,7 +10,6 @@ import {
 import React, {useEffect, useState} from 'react';
 import {images} from './constants';
 import {Header} from './components';
-import CookieManager from '@react-native-cookies/cookies';
 
 const App = () => {
   const [jokeContent, setJokeContent] = useState([
@@ -47,16 +46,6 @@ const App = () => {
   const [currentJoke, setCurrentJoke] = useState(null);
 
   useEffect(() => {
-    CookieManager.get('app://')
-      .then(cookies => {
-        if (cookies && cookies.voteStatus) {
-          // Nếu cookie tồn tại và có giá trị voteStatus, lấy giá trị bình chọn
-          setVoteStatus(cookies.voteStatus.value);
-        }
-      })
-      .catch(error => {
-        console.log('Error in getting cookie:', error);
-      });
     const getRandomUnreadJoke = () => {
       const unreadJokes = jokeContent.filter(joke => !joke.isRead);
       const randomIndex = Math.floor(Math.random() * unreadJokes.length);
@@ -80,19 +69,6 @@ const App = () => {
 
       setJokeContent(updatedJokes);
 
-      CookieManager.set('/', {
-        name: 'voteStatus',
-        value: 'yes',
-        expires: '2023-12-31T23:59:59',
-      })
-        .then(() => {
-          console.log('Vote status has been set to "yes"');
-          setVoteStatus('yes');
-        })
-        .catch(error => {
-          console.log('Error in setting cookie:', error);
-        });
-
       handleNextJoke();
     }
   };
@@ -110,10 +86,9 @@ const App = () => {
 
   const handleClearCookies = async () => {
     try {
-      await CookieManager.clearAll();
-      console.log('Cookies cleared successfully');
+      // console.log('Cookies cleared successfully');
     } catch (error) {
-      console.log('Error clearing cookies:', error);
+      // console.log('Error clearing cookies:', error);
     }
   };
 
