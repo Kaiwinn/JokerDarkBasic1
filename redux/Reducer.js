@@ -59,12 +59,10 @@ function storeItems(state = [], action) {
     case Types.REMOVE_VOTE:
       getStorage()
         .then(data => {
-          setStorage(
-            state.filter(storeItems => storeItems.id != action.payload.id),
-          );
+          setStorage([]);
         })
-        .catch(err => console.log('err   ' + err.message));
-      return state.filter(storeItems => storeItems.id != action.payload.id);
+        .catch(err => console.log('err Remove  ' + err.message));
+      return [];
   }
   return state;
 }

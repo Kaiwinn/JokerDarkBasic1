@@ -11,10 +11,9 @@ import React, {useEffect, useState} from 'react';
 import {Header} from './components';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TestCookies from './TestCookies';
 
 const App = props => {
-  const {loadVote, addVote, storeItems} = props;
+  const {loadVote, addVote, storeItems, remove} = props;
 
   const [jokeContent, setJokeContent] = useState([
     {
@@ -245,10 +244,14 @@ const App = props => {
             That's all the jokes for today! Come back another day!
           </Text>
 
-          <TouchableOpacity onPress={handleClearCookies}>
+          <TouchableOpacity
+            onPress={() => {
+              remove();
+            }}>
             <Text
               style={{
                 alignSelf: 'center',
+                color: '#65cfdf',
                 fontSize: 13,
                 marginTop: 10,
               }}>
@@ -310,6 +313,8 @@ const mapDispatchToProps = dispatch => {
     loadVote: vo => dispatch({type: 'LOAD_VOTE', payload: vo}),
 
     addVote: vo => dispatch({type: 'ADD_VOTE', payload: vo}),
+
+    remove: vo => dispatch({type: 'REMOVE_VOTE', payload: vo}),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
