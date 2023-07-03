@@ -294,12 +294,6 @@ const App = props => {
           }}>
           Copyright 2021 HLS
         </Text>
-        <View
-          style={{
-            height: 100,
-          }}>
-          <TestCookies allvote={storeItems} />
-        </View>
       </View>
     </ScrollView>
   );
