@@ -11,7 +11,22 @@ export const setStorage = async votes => {
 };
 
 export const handlerAddVote = (storeState, newVote) => {
-  return [...storeState, newVote];
+  const checkExists = storeState.some(element => {
+    return element.id === newVote.id;
+  });
+
+  if (checkExists == false) {
+    return [...storeState, newVote];
+  } else {
+    let newStore = storeState.map(eachStore => {
+      if (eachStore.id == newVote.id) {
+        return newVote;
+      } else {
+        return eachStore;
+      }
+    });
+    return newStore;
+  }
 };
 
 function storeItems(state = [], action) {
@@ -21,7 +36,9 @@ function storeItems(state = [], action) {
     case Types.ADD_VOTE:
       const newVote = {
         id: action.payload.id,
-        name: action.payload.name,
+        content: action.payload.content,
+        isRead: action.payload.isRead,
+        fun: action.payload.fun,
       };
 
       getStorage()

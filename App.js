@@ -11,8 +11,11 @@ import React, {useEffect, useState} from 'react';
 import {Header} from './components';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TestCookies from './TestCookies';
 
-const App = () => {
+const App = props => {
+  const {loadVote, addVote, storeItems} = props;
+
   const [jokeContent, setJokeContent] = useState([
     {
       id: 1,
@@ -22,22 +25,26 @@ const App = () => {
 
       The child ran back to his father and said, "You lied to me!" His father replied, "No, your mom was talking about her side of the family."`,
       isRead: false,
+      fun: null,
     },
     {
       id: 2,
       content:
         'Teacher: "Kids,what does the chicken give you?" Student: "Meat!" Teacher: "Very good! Now what does the pig give you?" Student: "Bacon!" Teacher: "Great! And what does the fat cow give you?" Student: "Homework!"',
       isRead: false,
+      fun: null,
     },
     {
       id: 3,
       content: `The teacher asked Jimmy, "Why is your cat at school today Jimmy?" Jimmy replied crying, "Because I heard my daddy tell my mommy, 'I am going to eat that pussy once Jimmy leaves for school today!'"`,
       isRead: false,
+      fun: null,
     },
     {
       id: 4,
       content: `A housewife, an accountant and a lawyer were asked "How much is 2+2?" The housewife replies: "Four!". The accountant says: "I think it's either 3 or 4. Let me run those figures through my spreadsheet one more time." The lawyer pulls the drapes, dims the lights and asks in a hushed voice, "How much do you want it to be?"`,
       isRead: false,
+      fun: null,
     },
   ]);
 
@@ -52,7 +59,7 @@ const App = () => {
       await AsyncStorage.setItem('Vote', JSON.stringify([]));
     } else {
       const data = JSON.parse(exists);
-      // loadVote(data);
+      loadVote(data);
     }
   };
 
@@ -68,7 +75,7 @@ const App = () => {
     setCurrentJoke(getRandomUnreadJoke());
   }, [jokeContent]);
 
-  const handleVoteYes = () => {
+  const handleVoteYes = fun => {
     if (currentJoke) {
       const updatedJokes = jokeContent.map(joke => {
         if (joke.id === currentJoke.id) {
@@ -77,7 +84,7 @@ const App = () => {
             isRead: true,
           };
         }
-        addVote(joke);
+
         return joke;
       });
 
@@ -164,7 +171,16 @@ const App = () => {
               justifyContent: 'space-around',
               alignItems: 'center',
             }}>
-            <TouchableOpacity onPress={handleVoteYes}>
+            <TouchableOpacity
+              onPress={() => {
+                handleVoteYes();
+                const updatedJoke = {
+                  ...currentJoke,
+                  isRead: true,
+                  fun: true,
+                };
+                addVote(updatedJoke);
+              }}>
               <View
                 style={{
                   height: screenHeight * 0.056,
@@ -184,7 +200,16 @@ const App = () => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleVoteYes();
+                const updatedJoke = {
+                  ...currentJoke,
+                  isRead: true,
+                  fun: false,
+                };
+                addVote(updatedJoke);
+              }}>
               <View
                 style={{
                   height: screenHeight * 0.056,
@@ -269,6 +294,12 @@ const App = () => {
           }}>
           Copyright 2021 HLS
         </Text>
+        <View
+          style={{
+            height: 100,
+          }}>
+          <TestCookies allvote={storeItems} />
+        </View>
       </View>
     </ScrollView>
   );
