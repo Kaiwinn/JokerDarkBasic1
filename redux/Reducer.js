@@ -46,8 +46,8 @@ function storeItems(state = [], action) {
           const store = [...data];
           const newStore = handlerAddVote(store, newVote);
           setStorage(newStore);
-          console.log('Kaiiiwinn :');
-          console.log(store);
+          console.log('Đã add :');
+          console.log(newStore);
         })
         .catch(err => console.log('err   ' + err.message));
 
@@ -60,6 +60,7 @@ function storeItems(state = [], action) {
       getStorage()
         .then(data => {
           setStorage([]);
+          console.log('Đã xóa hết !');
         })
         .catch(err => console.log('err Remove  ' + err.message));
       return [];
